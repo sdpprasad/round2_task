@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XOX Game</title>
+    <style>
+        *{
+            background: pink;
+            text-align: center;
+
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 5px;
+            margin: auto;
+            text-align: center;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #000;
+            font-size: 2em;
+            text-align: center;
+/*            justify-content: center;*/
+        }
+    </style>
+</head>
+<body>
+    <h1>XOX Game</h1><center>
+    <div class="board" id="board" style="text-align: center;"></div></center>
+    <script>
+        const boardElement = document.getElementById("board");
+        let currentPlayer = 'X';
+        let board = ['', '', '', '', '', '', '', '', ''];
+
+        function drawBoard() {
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.dataset.index = i;
+                cell.addEventListener('click', () => handleCellClick(i));
+                boardElement.appendChild(cell);
+            }
+        }
+
+        function handleCellClick(index) {
+            if (board[index] === '' && !checkWinner()) {
+                board[index] = currentPlayer;
+                updateBoard();
+                currentPlayer = (currentPlayer === 'X') ? 'O' : 'X';
+            }
+        }
+
+        function updateBoard() {
+            const cells = boardElement.querySelectorAll('.cell');
+            cells.forEach((cell, index) => {
+                cell.textContent = board[index];
+            });
+        }
+
+        function checkWinner() {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+
+            for (const pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (board[a] !== '' && board[a] === board[b] && board[a] === board[c]) {
+                    alert(`${board[a]} wins!`);
+                    return true;
+                }
+            }
+
+            if (!board.includes('')) {
+                alert('It\'s a draw!');
+                return true;
+            }
+
+            return false;
+        }
+
+        drawBoard();
+    </script>
+
+</body>
+</html>
